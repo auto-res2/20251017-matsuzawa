@@ -1,0 +1,152 @@
+name: Compile LaTeX with Open Code
+
+on:
+  workflow_dispatch:
+    inputs:
+      subdir:
+        description: 'Subdirectory under .research/latex/ (e.g., iclr2025)'
+        required: true
+      image_source_branches:
+        description: 'Branches to fetch images from (JSON array format)'
+        required: true
+      model_name:
+        description: "Model to use"
+        required: true
+        default: 'anthropic/claude-sonnet-4-5-20250929'
+
+permissions:
+  id-token: write
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  autonomous-latex-fix-and-compile:
+    name: Autonomous LaTeX Fix and Compile Cycle
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    env:
+      LATEX_DIR: .research/latex/${{ github.event.inputs.subdir }}
+      CHKTEX_COMMAND: |
+        set -e
+        echo "=== [PHASE 1/2] Running ChkTeX... ==="
+        chktex -q paper.tex
+      COMPILE_COMMAND: |
+        set -e
+        echo "=== [PHASE 2/2] Compiling LaTeX document... ==="
+        pdflatex -interaction=nonstopmode paper.tex
+        bibtex paper
+        pdflatex -interaction=nonstopmode paper.tex
+        pdflatex -interaction=nonstopmode paper.tex
+      PROMPT: |
+        You are a fully autonomous AI assistant specializing in LaTeX document correction.
+        Your task is to ensure the LaTeX paper is free of chktex warnings and compiles successfully into a PDF. You will achieve this by executing, analyzing, fixing, and re-validating the document.
+        You have been granted full tool access.
+
+        Guiding Principles:
+        - Scope: Do not perform any Git operations like commit or push. Your sole responsibility is to make the LaTeX document compilable.
+        - Method: When fixing errors, you MUST only modify existing files. Do not create new files.
+        - Minimal Edits: You MUST limit your changes to the absolute minimum required to fix LaTeX syntax, chktex warnings, or compilation errors.
+        - Autonomy: Execute all steps autonomously without asking for permission.
+
+        Procedure:
+        1.  Change Directory: First, change your working directory to `$LATEX_DIR`. All subsequent commands MUST be run from this directory.
+        2.  Run ChkTeX: Execute the command `bash -c "$CHKTEX_COMMAND"`.
+        3.  Analyze & Fix ChkTeX: If the command fails, you MUST analyze the chktex warnings from the output, fix the `paper.tex` file, and repeat step 2 until it passes.
+        4.  Run LaTeX Compile: Once chktex passes, execute `bash -c "$COMPILE_COMMAND"`.
+        5.  Analyze & Fix Compilation: If compilation fails, you MUST analyze the LaTeX errors (e.g., undefined control sequences, missing files, bad boxes), fix the `.tex` files, and repeat step 4 until it succeeds.
+        6.  Completion: Once both phases are complete, the task is finished.
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install LaTeX, ChkTeX, and other dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            chktex \
+            texlive-base \
+            texlive-latex-recommended \
+            texlive-fonts-recommended \
+            texlive-latex-extra \
+            texlive-science \
+            jq
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install opencode
+        run: |
+          curl -fsSL https://opencode.ai/install | bash
+
+      - name: Install bun
+        run: npm install -g bun
+
+      - name: Fetch images from selected branches
+        run: |
+          dest_dir="${LATEX_DIR}/images"
+          mkdir -p "$dest_dir"
+          readarray -t branches < <(echo '${{ github.event.inputs.image_source_branches }}' | jq -r '.[]')
+
+          for branch in "${branches[@]}"; do
+            echo "Processing branch: $branch"
+
+            tmp_dir="$(mktemp -d)"
+            git fetch origin $branch
+            git --work-tree="$tmp_dir" checkout origin/$branch -- .research/ || true
+
+            latest=$(ls "$tmp_dir/.research" | grep '^iteration[0-9]\+$' | sed 's/iteration//' | sort -n | tail -n1)
+
+            if [ -n "$latest" ]; then
+              src_dir="$tmp_dir/.research/iteration${latest}/images"
+              echo "Copying from $src_dir to $dest_dir"
+              cp -r "$src_dir"/* "$dest_dir" || echo "No images to copy"
+            else
+              echo "No iteration directories found in $branch"
+            fi
+
+            rm -rf "$tmp_dir"
+          done
+
+      - name: OpenCode Autonomous LaTeX Fix and Compile Loop
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: opencode run --model "${{ github.event.inputs.model_name }}" "$PROMPT"
+
+      - name: Move compiled PDF to .research/
+        run: |
+          src="${LATEX_DIR}/paper.pdf"
+          dest=".research/paper.pdf"
+          if [ -f "$src" ]; then
+            mv "$src" "$dest"
+            echo "Successfully moved compiled PDF to $dest"
+          else
+            echo "Warning: Compiled PDF not found at $src"
+            exit 1
+          fi
+
+      - name: Commit and push LaTeX outputs
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git add .
+
+          if ! git diff --staged --quiet; then
+            git commit -m "[CI] Autonomous LaTeX fixes and compilation for ${{ github.event.inputs.latex_subdir }}"
+            for i in {1..5}; do
+              git push && break
+              echo "Push failed on attempt $i. Retrying in $((2**i)) seconds..."
+              sleep $((2**i))
+            done
+          else
+            echo "No changes were made by the agent."
+          fi

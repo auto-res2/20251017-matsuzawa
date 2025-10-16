@@ -1,0 +1,110 @@
+name: Run Evaluation with Open Code
+
+on:
+  workflow_dispatch:
+    inputs:
+      experiment_iteration:
+        description: "Iteration count"
+        required: true
+      model_name:
+        description: "Model to use"
+        required: true
+        default: 'anthropic/claude-sonnet-4-5-20250929'
+
+permissions:
+  id-token: write
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  autonomous-evaluation-and-fix:
+    name: Autonomous Evaluation and Fix Cycle
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    env:
+      SYNC_COMMAND: "uv sync"
+      EVALUATION_COMMAND: |
+        set -e
+        mkdir -p "$RESULTS_DIR/images"
+        mkdir -p "$RESULTS_DIR/wandb_data"
+        echo "=== [EVALUATION] Start at $(date -u) ==="
+
+        uv run python -m src.evaluate \
+          results_dir="$RESULTS_DIR"
+        echo "=== [EVALUATION] PASSED at $(date -u) ==="
+      PROMPT: |
+        You are a fully autonomous AI research assistant.
+        Your task is to ensure the evaluation script runs successfully to completion to generate comparison figures and aggregated metrics, by executing, analyzing, fixing, and re-validating it.
+        You have been granted full tool access.
+
+        Guiding Principles:
+        - Scope: Do not perform any Git operations like commit or push. Your sole responsibility is to make the code runnable.
+        - Method: When fixing errors, you MUST only modify existing files; do not create or delete any files.
+        - Autonomy: Execute all steps autonomously. Do not ask for permission.
+
+        Procedure:
+        1.  Initial Setup: First, run `bash -c "$SYNC_COMMAND"` to install dependencies.
+        2.  Run Evaluation: Execute `bash -c "$EVALUATION_COMMAND"`.
+            While it runs, you MUST monitor progress by checking the tail of the output log.
+        3.  Analyze & Fix Loop: If evaluation fails, you MUST analyze the error, use your tools to fix the code, and then re-run evaluation. Repeat this cycle until it succeeds.
+            A successful run is only confirmed when a message starting with `=== [EVALUATION] PASSED` is present in the output log.
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install uv and dependencies
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+          enable-cache: false
+
+      - name: Prepare results dir
+        run: |
+          iteration_dir=".research/iteration${{ github.event.inputs.experiment_iteration }}"
+          mkdir -p "$iteration_dir"
+          echo "RESULTS_DIR=$iteration_dir" >> "$GITHUB_ENV"
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install opencode
+        run: |
+          curl -fsSL https://opencode.ai/install | bash
+
+      - name: Install bun
+        run: npm install -g bun
+
+      - name: OpenCode Autonomous Evaluation, Fix, and Validate Loop
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+        run: opencode run --model "${{ github.event.inputs.model_name }}" "$PROMPT"
+
+      - name: Commit and push evaluation results
+        if: always()
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git add "$RESULTS_DIR"
+          git add --update .
+
+          if ! git diff --staged --quiet; then
+            git commit -m "[CI] Commit evaluation results (iteration ${{ github.event.inputs.experiment_iteration }})"
+            for i in {1..5}; do
+              git pull --rebase && git push && break
+              echo "Push failed on attempt $i. Retrying in $((2**i)) seconds..."
+              sleep $((2**i))
+            done
+          else
+            echo "No changes were made by the agent or the evaluation."
+          fi
