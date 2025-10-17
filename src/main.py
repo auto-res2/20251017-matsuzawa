@@ -5,13 +5,12 @@ import sys
 from typing import List
 
 import hydra
-from hydra.utils import get_original_cli_args
 
 
-@hydra.main(config_path="../config")
+@hydra.main(config_path="../config", config_name="config", version_base=None)
 def main(cfg):
     """Hydra entrypoint that forwards all CLI overrides to the training subprocess."""
-    original_cli: List[str] = get_original_cli_args()
+    original_cli: List[str] = sys.argv[1:]
 
     # Build subprocess command ------------------------------------------------
     cmd = [sys.executable, "-u", "-m", "src.train"] + original_cli

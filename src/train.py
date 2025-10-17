@@ -202,7 +202,7 @@ def _apply_optuna_suggestions(cfg, trial: optuna.Trial, param_map: Dict[str, Seq
 # Hydra entrypoint ----------------------------------------------------------
 # ---------------------------------------------------------------------------
 
-@hydra.main(config_path="../config")
+@hydra.main(config_path="../config", config_name="config", version_base=None)
 def main(cfg):  # noqa: C901
     """Hydra-managed entrypoint. Handles Optuna & final training."""
 
@@ -211,18 +211,20 @@ def main(cfg):  # noqa: C901
     # ---------------------------------------------------------------------
     # Flatten configuration: merge run-specific subtree into root namespace
     # ---------------------------------------------------------------------
+    OmegaConf.set_struct(cfg, False)
     flat_cfg = OmegaConf.merge(cfg, cfg.run)  # later keys (run) overwrite root duplicates
     if cfg.get("trial_mode", False):
         flat_cfg.trial_mode = True
         flat_cfg.wandb.mode = "disabled"
-    flat_cfg.results_dir = cfg.results_dir
+    if "results_dir" in cfg:
+        flat_cfg.results_dir = cfg.results_dir
 
     # results directory ----------------------------------------------------
     results_dir = Path(flat_cfg.results_dir).expanduser().absolute()
     _save_cfg(flat_cfg, results_dir)
 
     # --------------------- Hyper-parameter search -------------------------
-    if int(flat_cfg.optuna.n_trials) > 0 and not flat_cfg.get("trial_mode", False):
+    if flat_cfg.get("optuna") and int(flat_cfg.optuna.n_trials) > 0 and not flat_cfg.get("trial_mode", False):
         param_map = {
             "learning_rate": ["training", "learning_rate"],
             "batch_size": ["training", "batch_size"],
