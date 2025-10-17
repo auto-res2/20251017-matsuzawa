@@ -24,3 +24,8 @@ Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-mats
 === [TRIAL RUN] END for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:24:45 AM UTC 2025 ===
 
 === [TRIAL RUN] Start for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:25:07 AM UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:26:08 AM UTC 2025 ===
+Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.256649136543274, 'train_acc': 0.25, 'val_acc': 0.25, 'train_f1': 0.16666666666666666, 'val_f1': 0.1, 'best_val_acc': 0.25, 'best_val_f1': 0.1, 'inference_time': 7.387371063232421e-05}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] END for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:26:26 AM UTC 2025 ===
+
