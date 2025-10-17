@@ -46,18 +46,39 @@ def _build_cifar10(cfg, trial_mode: bool):
     ]
     tfm_eval = [transforms.Resize(size), transforms.ToTensor()]
 
-    train_ds = tv_datasets.CIFAR10(root=".cache/", train=True, download=True)
-    test_ds = tv_datasets.CIFAR10(root=".cache/", train=False, download=True)
-    full_ds = ConcatDataset([train_ds, test_ds])
-    train_set, val_set, test_set = _split(full_ds, (
-        cfg.dataset.split.train,
-        cfg.dataset.split.val,
-        cfg.dataset.split.test,
-    ))
+    hf_dataset = load_dataset("uoft-cs/cifar10", split="train", cache_dir=".cache/")
+    
+    class _HFCIFARWrapper(torch.utils.data.Dataset):
+        def __init__(self, indices, full_data, tfm):
+            self.indices = indices
+            self.data = full_data
+            self.tfm = tfm
+        
+        def __len__(self):
+            return len(self.indices)
+        
+        def __getitem__(self, idx):
+            actual_idx = self.indices[idx]
+            item = self.data[actual_idx]
+            img = item['img']
+            label = item['label']
+            img = self.tfm(img)
+            return {"pixel_values": img, "labels": torch.tensor(label, dtype=torch.long)}
+    
+    n_total = len(hf_dataset)
+    splits = (cfg.dataset.split.train, cfg.dataset.split.val, cfg.dataset.split.test)
+    lengths = [int(p * n_total) for p in splits]
+    lengths[-1] = n_total - sum(lengths[:-1])
+    
+    indices = list(range(n_total))
+    random.Random(42).shuffle(indices)
+    train_indices = indices[:lengths[0]]
+    val_indices = indices[lengths[0]:lengths[0]+lengths[1]]
+    test_indices = indices[lengths[0]+lengths[1]:]
 
-    train_set = _CIFARWrapper(train_set, transforms.Compose(tfm_train))
-    val_set = _CIFARWrapper(val_set, transforms.Compose(tfm_eval))
-    test_set = _CIFARWrapper(test_set, transforms.Compose(tfm_eval))
+    train_set = _HFCIFARWrapper(train_indices, hf_dataset, transforms.Compose(tfm_train))
+    val_set = _HFCIFARWrapper(val_indices, hf_dataset, transforms.Compose(tfm_eval))
+    test_set = _HFCIFARWrapper(test_indices, hf_dataset, transforms.Compose(tfm_eval))
 
     bs = 2 if trial_mode else int(cfg.training.batch_size)
     dl_kwargs = dict(batch_size=bs, num_workers=2, pin_memory=True)
