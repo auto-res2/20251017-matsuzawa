@@ -1,20 +1,8 @@
-=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:19:46 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 2.347809076309204, 'val_loss': 2.3752623796463013, 'train_acc': 0.0, 'val_acc': 0.0, 'train_f1': 0.0, 'val_f1': 0.0, 'best_val_acc': 0.0, 'best_val_f1': 0.0, 'inference_time': 9.612665176391601e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:20:24 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:20:39 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 0.6441566944122314, 'val_loss': 0.6191309094429016, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.544573758816609e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:21:10 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:21:27 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.256649136543274, 'train_acc': 0.25, 'val_acc': 0.25, 'train_f1': 0.16666666666666666, 'val_f1': 0.1, 'best_val_acc': 0.25, 'best_val_f1': 0.1, 'inference_time': 7.292270660400391e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:21:45 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:22:01 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.597222992957467e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:22:31 AM UTC 2025 ===
-
+=== [FULL EXPERIMENT] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:35:18 AM UTC 2025 ===
+Optuna best params: {'learning_rate': 1.4652780134491739e-05, 'batch_size': 4, 'weight_decay': 0.032782827000789196}
+WandB URL: https://wandb.ai/gengaru617-personal/251017-test/runs/comparative-1-DistilBERT-base-66M-alpaca-cleaned
+Epoch 1: {'epoch': 1, 'train_loss': 0.010549441700560937, 'val_loss': 0.00017683345448750857, 'train_acc': 0.997271058732612, 'val_acc': 0.999806800618238, 'train_f1': 0.997413439745346, 'val_f1': 0.9998082330123802, 'best_val_acc': 0.999806800618238, 'best_val_f1': 0.9998082330123802, 'inference_time': 0.014027384738833679}
+Epoch 2: {'epoch': 2, 'train_loss': 0.0008009774206199059, 'val_loss': 7.197169451515847e-07, 'train_acc': 0.9999034003091191, 'val_acc': 1.0, 'train_f1': 0.9999036493954858, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 0.01403509907228685}
+Epoch 3: {'epoch': 3, 'train_loss': 0.0003557141614758855, 'val_loss': 6.285172518039268e-08, 'train_acc': 0.9999517001545595, 'val_acc': 1.0, 'train_f1': 0.9999517001545595, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 0.014034181879329534}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1
+=== [FULL EXPERIMENT] PASSED for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 06:25:10 PM UTC 2025 ===
