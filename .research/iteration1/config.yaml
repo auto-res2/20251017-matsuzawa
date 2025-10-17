@@ -2,7 +2,7 @@ run:
   run_id: proposed-DistilBERT-base-66M-CIFAR-10
   method: proposed
   model:
-    name: distilbert-base-66M
+    name: distilbert-base-uncased
     task_adapters:
       enabled: true
       adapter_type: houlsby

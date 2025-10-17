@@ -1,7 +1,7 @@
 run_id: comparative-1-DistilBERT-base-66M-CIFAR-10
 method: comparative-1
 model:
-  name: distilbert-base-66M
+  name: distilbert-base-uncased
   adapter: null
   num_labels: 10
   input_representation: image_sequence

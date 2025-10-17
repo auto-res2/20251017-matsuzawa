@@ -50,7 +50,9 @@ class DistilBertClassifier(nn.Module):
     def __init__(self, model_name: str, num_labels: int, adapter_cfg=None, vision_patch_cfg=None):
         super().__init__()
         self.is_vision = vision_patch_cfg is not None
-        self.bert = DistilBertModel.from_pretrained(model_name, cache_dir=".cache/")
+        import os
+        cache_dir = os.path.join(os.getcwd(), ".cache")
+        self.bert = DistilBertModel.from_pretrained(model_name, cache_dir=cache_dir)
         hidden = self.bert.config.hidden_size
 
         if self.is_vision:
