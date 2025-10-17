@@ -13,3 +13,8 @@ Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.2566491365
 Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
 === [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:21:45 AM UTC 2025 ===
 
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:22:01 AM UTC 2025 ===
+Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.597222992957467e-05}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:22:31 AM UTC 2025 ===
+
