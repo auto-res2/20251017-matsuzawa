@@ -1,0 +1,414 @@
+
+Input:
+You are a cutting-edge AI researcher generating complete, executable code for research paper experiments with Hydra configuration management.
+
+Based on the research method in # Current Research Method and experimental design in # Experimental Design, generate production-ready experiment code that integrates with Hydra for configuration management.
+
+# Instructions: Complete Experiment Code Generation
+
+## Core Requirements
+- COMPLETE IMPLEMENTATION: Every component must be fully functional, production-ready, publication-worthy code. No "omitted for brevity", no "simplified version", no TODO, PLACEHOLDER, pass, or ...
+- PYTORCH EXCLUSIVELY: Use PyTorch as the deep learning framework
+- HYDRA INTEGRATION: Use Hydra to manage all experiment configurations from `config/run/*.yaml` files. Use `config_path="../config"` in all @hydra.main decorators
+- COMPLETE DATA PIPELINE: Full data loading and preprocessing implementation. Use `.cache/` as the cache directory for all datasets and models (e.g., for HuggingFace, set `cache_dir=".cache/"`)
+- WANDB REQUIRED: WandB is mandatory for metrics logging (except trial_mode validation)
+
+## Hydra Configuration Structure
+Each run config file (`config/run/{run_id}.yaml`) contains:
+- run_id: Unique identifier for this run
+- method: The method name (baseline, proposed, ablation, etc.)
+- model: Model-specific parameters (name, architecture details, hyperparameters)
+- dataset: Dataset-specific parameters (name, preprocessing settings, split ratios)
+- training: Training hyperparameters (learning rate, batch size, epochs, optimizer settings, validation split)
+- optuna: Hyperparameter search space definition for Optuna optimization
+
+## Command Line Interface
+The generated code must support the following CLI:
+
+**Training (main.py):**
+```bash
+# Full experiment with WandB logging
+uv run python -u -m src.main run={run_id} results_dir={path}
+
+# Trial mode (validation only, WandB disabled)
+uv run python -u -m src.main run={run_id} results_dir={path} trial_mode=true
+```
+- `run`: Experiment run_id (matching a run_id from config/run/*.yaml)
+- `results_dir`: Output directory (passed from GitHub Actions workflow)
+- `trial_mode=true` (optional): Lightweight execution for validation (epochs=1, batches limited to 1-2, disable Optuna n_trials=0, **WandB disabled**)
+
+**Evaluation (evaluate.py, independent execution):**
+```bash
+uv run python -m src.evaluate results_dir={path}
+```
+- `results_dir`: Directory containing experiment metadata and where outputs will be saved
+- Executed as a separate workflow after all training runs complete
+- **NOT called from main.py**
+
+## Script Structure (ExperimentCode format)
+Generate complete code for these files ONLY. Do not create any additional files beyond this structure:
+
+**`src/train.py`**: Single experiment run executor
+- Uses Hydra config to load all parameters
+- Called as subprocess by main.py
+- Responsibilities:
+  * Train model with given configuration
+  * Initialize WandB: `wandb.init(entity=cfg.wandb.entity, project=cfg.wandb.project, id=cfg.run.run_id, config=OmegaConf.to_container(cfg, resolve=True), resume="allow")`
+  * Skip `wandb.init()` if `cfg.wandb.mode == "disabled"` (trial_mode)
+  * Log ALL metrics to WandB: `wandb.log({"train_loss": 0.5, "val_acc": 0.85, "epoch": 1, ...})`
+  * Print WandB run URL to stdout
+- **NO results.json, no stdout JSON output, no figure generation**
+
+**`src/evaluate.py`**: Independent evaluation and visualization script
+- **Execution**: Run independently via `uv run python -m src.evaluate results_dir={path}`
+- **NOT called from main.py** - executes as separate workflow after all training completes
+- **Responsibilities**:
+  * Parse `results_dir` from command line arguments
+  * Load WandB config from `{results_dir}/config.yaml`
+  * Retrieve all experimental data from WandB API:
+    ```python
+    api = wandb.Api()
+    runs = api.runs(f"{entity}/{project}")
+    for run in runs:
+        metrics_df = run.history()  # pandas DataFrame with all logged metrics
+    ```
+  * Export retrieved data to:
+    - `{results_dir}/wandb_data/run_{run_id}_metrics.csv` (per-run metrics)
+    - `{results_dir}/wandb_data/summary.json` (aggregated comparison)
+  * Compute secondary/derived metrics (e.g., improvement rate: (proposed - baseline) / baseline)
+  * Generate ALL publication-quality PDF figures and save to `{results_dir}/images/`:
+    - Learning curves (loss, accuracy over epochs)
+    - Cross-run comparison charts (bar charts, box plots)
+    - Performance metrics tables
+  * Use matplotlib or seaborn with proper legends, annotations, tight_layout
+    - For line graphs: annotate significant values (final/best values)
+    - For bar graphs: annotate values above each bar
+  * Follow naming convention: `<figure_topic>[_<condition>][_pairN].pdf`
+  * Print generated figure names to stdout
+
+**`src/preprocess.py`**: Complete preprocessing pipeline implementation for the specified datasets
+
+**`src/model.py`**: Complete model architecture implementations for all methods (proposed and comparative methods)
+
+**`src/main.py`**: Main orchestrator
+- Receives run_id via Hydra, launches train.py as subprocess, manages logs
+- **DOES NOT call evaluate.py** (evaluate.py runs independently in separate workflow)
+- Use `@hydra.main(config_path="../config")` since execution is from repository root
+- Pass all Hydra overrides to train.py subprocess (e.g., `wandb.mode=disabled`, `trial_mode=true`)
+- In trial_mode, automatically set `wandb.mode=disabled`
+
+**`config/config.yaml`**: Main Hydra configuration file
+- MUST include WandB configuration:
+  ```yaml
+  wandb:
+    entity: gengaru617-personal
+    project: 251017-test
+    mode: online  # Automatically set to "disabled" in trial_mode
+  ```
+
+**`pyproject.toml`**: Complete project dependencies
+- MUST include: `hydra-core`, `wandb` (required)
+- Include as needed: `optuna`, `torch`, `transformers`, `datasets`, etc.
+
+
+## Key Implementation Focus Areas
+1. **Hydra-Driven Configuration**: All parameters loaded from run configs dynamically
+2. **Algorithm Core**: Full implementation of the proposed method with proper abstraction
+3. **Trial Mode Behavior**: trial_mode=true automatically disables WandB (sets wandb.mode=disabled)
+4. **Run Execution**: main.py executes a single run_id passed via CLI (GitHub Actions dispatches multiple runs separately)
+5. **WandB Integration**: All metrics logged to WandB; train.py does NOT output JSON to stdout or save results.json
+6. **Independent Evaluation**: evaluate.py runs separately, fetches data from WandB API, generates all figures
+
+
+
+## Code Validation Feedback
+
+
+
+
+# Experimental Environment
+cpu
+RAM：500 MB
+
+# Current Research Method
+We compare DistilBERT with task-specific adapters (proposed) against standard fine-tuning (comparative) across vision and language tasks to evaluate performance improvements.
+
+# Experimental Design
+- Summary: Comparative analysis of DistilBERT performance across vision and language tasks
+- Evaluation metrics: ['accuracy', 'f1_score', 'inference_time']
+
+# Experiment Runs
+
+- Run ID: proposed-DistilBERT-base-66M-CIFAR-10
+  Method: proposed
+  Model: DistilBERT-base-66M
+  Dataset: CIFAR-10
+  Config File: config/run/proposed-DistilBERT-base-66M-CIFAR-10.yaml
+  
+  Config Content:
+  ```yaml
+  run_id: proposed-DistilBERT-base-66M-CIFAR-10
+method: proposed
+model:
+  name: distilbert-base-66M
+  task_adapters:
+    enabled: true
+    adapter_type: houlsby
+    reduction_factor: 16
+    non_linearity: relu
+  num_labels: 10
+  input_representation: image_sequence
+  vision_patch:
+    patch_size: 4
+dataset:
+  name: cifar10
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+  preprocessing:
+    resize: 32
+    augmentations:
+      - random_crop
+      - horizontal_flip
+training:
+  optimizer: adamw
+  learning_rate: 1e-4
+  batch_size: 16
+  epochs: 20
+  weight_decay: 0.01
+  warmup_steps: 500
+  max_grad_norm: 1.0
+  gradient_accumulation_steps: 1
+evaluation:
+  metrics:
+    - accuracy
+    - f1_score
+    - inference_time
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1e-5
+      high: 5e-4
+    batch_size:
+      type: categorical
+      choices:
+        - 8
+        - 16
+        - 32
+    adapter_reduction_factor:
+      type: int
+      low: 4
+      high: 32
+      step: 4
+    weight_decay:
+      type: uniform
+      low: 0.0
+      high: 0.1
+
+  ```
+  
+
+- Run ID: proposed-DistilBERT-base-66M-alpaca-cleaned
+  Method: proposed
+  Model: DistilBERT-base-66M
+  Dataset: alpaca-cleaned
+  Config File: config/run/proposed-DistilBERT-base-66M-alpaca-cleaned.yaml
+  
+  Config Content:
+  ```yaml
+  run_id: proposed-DistilBERT-base-66M-alpaca-cleaned
+method: proposed
+model:
+  name: distilbert-base-66M
+  task_adapters:
+    enabled: true
+    adapter_type: houlsby
+    reduction_factor: 16
+    non_linearity: relu
+  num_labels: 2
+dataset:
+  name: alpaca-cleaned
+  max_length: 512
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+training:
+  optimizer: adamw
+  learning_rate: 5e-5
+  batch_size: 8
+  epochs: 3
+  weight_decay: 0.01
+  warmup_steps: 500
+  max_grad_norm: 1.0
+evaluation:
+  metrics:
+    - accuracy
+    - f1_score
+    - inference_time
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1e-5
+      high: 3e-4
+    batch_size:
+      type: categorical
+      choices:
+        - 4
+        - 8
+        - 16
+    adapter_reduction_factor:
+      type: int
+      low: 4
+      high: 32
+      step: 4
+    weight_decay:
+      type: uniform
+      low: 0.0
+      high: 0.1
+
+  ```
+  
+
+- Run ID: comparative-1-DistilBERT-base-66M-CIFAR-10
+  Method: comparative-1
+  Model: DistilBERT-base-66M
+  Dataset: CIFAR-10
+  Config File: config/run/comparative-1-DistilBERT-base-66M-CIFAR-10.yaml
+  
+  Config Content:
+  ```yaml
+  run_id: comparative-1-DistilBERT-base-66M-CIFAR-10
+method: comparative-1
+model:
+  name: distilbert-base-66M
+  adapter: null
+  num_labels: 10
+  input_representation: image_sequence
+  vision_patch:
+    patch_size: 4
+dataset:
+  name: cifar10
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+  preprocessing:
+    resize: 32
+    augmentations:
+      - random_crop
+      - horizontal_flip
+training:
+  optimizer: adamw
+  learning_rate: 2e-4
+  batch_size: 16
+  epochs: 20
+  weight_decay: 0.01
+  warmup_steps: 500
+  max_grad_norm: 1.0
+  gradient_accumulation_steps: 1
+evaluation:
+  metrics:
+    - accuracy
+    - f1_score
+    - inference_time
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1e-5
+      high: 5e-4
+    batch_size:
+      type: categorical
+      choices:
+        - 8
+        - 16
+        - 32
+    weight_decay:
+      type: uniform
+      low: 0.0
+      high: 0.1
+
+  ```
+  
+
+- Run ID: comparative-1-DistilBERT-base-66M-alpaca-cleaned
+  Method: comparative-1
+  Model: DistilBERT-base-66M
+  Dataset: alpaca-cleaned
+  Config File: config/run/comparative-1-DistilBERT-base-66M-alpaca-cleaned.yaml
+  
+  Config Content:
+  ```yaml
+  run_id: comparative-1-DistilBERT-base-66M-alpaca-cleaned
+method: comparative-1
+model:
+  name: distilbert-base-66M
+  adapter: null
+  num_labels: 2
+dataset:
+  name: alpaca-cleaned
+  max_length: 512
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+training:
+  optimizer: adamw
+  learning_rate: 2e-4
+  batch_size: 8
+  epochs: 3
+  weight_decay: 0.01
+  warmup_steps: 500
+  max_grad_norm: 1.0
+evaluation:
+  metrics:
+    - accuracy
+    - f1_score
+    - inference_time
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1e-5
+      high: 3e-4
+    batch_size:
+      type: categorical
+      choices:
+        - 4
+        - 8
+        - 16
+    weight_decay:
+      type: uniform
+      low: 0.0
+      high: 0.1
+
+  ```
+  
+
+
+# External Resources (Use these for implementation)
+
+
+Generate complete, production-ready experiment code that integrates with Hydra configuration system.
+Output:
+{
+    "train_py": "import os\nimport sys\nimport time\nimport subprocess\nfrom typing import Dict, Any\n\nimport hydra\nfrom omegaconf import OmegaConf\nimport torch\nfrom torch import nn\nfrom torch.utils.data import DataLoader\nfrom sklearn.metrics import accuracy_score, f1_score\nimport wandb\n\n# Local imports\nfrom .preprocess import build_dataloaders\nfrom .model import build_model\n\n\ndef _set_seed(seed: int = 42):\n    import random\n    import numpy as np\n\n    random.seed(seed)\n    np.random.seed(seed)\n    torch.manual_seed(seed)\n    torch.cuda.manual_seed_all(seed)\n\n\n@hydra.main(config_path=\"../config\")\ndef train(cfg):\n    cfg = OmegaConf.to_container(cfg, resolve=True)\n    # Convert back to OmegaConf for attribute access convenience\n    cfg = OmegaConf.create(cfg)\n\n    trial_mode = cfg.get(\"trial_mode\", False)\n    device = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\n    _set_seed()\n\n    # Data -------------------------------------------------------------------\n    train_loader, val_loader, test_loader, tokenizer = build_dataloaders(cfg, trial_mode=trial_mode)\n\n    # Model ------------------------------------------------------------------\n    model = build_model(cfg, tokenizer)\n    model.to(device)\n\n    # Optimizer --------------------------------------------------------------\n    optim_cls = {\n        \"adamw\": torch.optim.AdamW,\n        \"sgd\": torch.optim.SGD,\n    }[cfg.training.optimizer.lower()]\n\n    optimizer = optim_cls(\n        model.parameters(),\n        lr=cfg.training.learning_rate,\n        weight_decay=cfg.training.weight_decay,\n    )\n\n    criterion = nn.CrossEntropyLoss()\n\n    # WandB ------------------------------------------------------------------\n    wandb_mode = cfg.wandb.mode if not trial_mode else \"disabled\"\n    if wandb_mode != \"disabled\":\n        wandb.init(\n            entity=cfg.wandb.entity,\n            project=cfg.wandb.project,\n            id=cfg.run.run_id,\n            config=OmegaConf.to_container(cfg, resolve=True),\n            resume=\"allow\",\n            mode=wandb_mode,\n        )\n        print(f\"WandB URL: {wandb.run.get_url()}\")\n\n    # Training ---------------------------------------------------------------\n    epochs = 1 if trial_mode else cfg.training.epochs\n    global_step = 0\n    for epoch in range(1, epochs + 1):\n        model.train()\n        train_losses = []\n        true_labels, pred_labels = [], []\n        for step, batch in enumerate(train_loader):\n            if trial_mode and step > 1:\n                break\n            labels = batch.pop(\"labels\").to(device)\n            for k in batch:\n                batch[k] = batch[k].to(device)\n            outputs = model(batch)\n            loss = criterion(outputs, labels)\n            loss.backward()\n            torch.nn.utils.clip_grad_norm_(model.parameters(), cfg.training.max_grad_norm)\n            optimizer.step()\n            optimizer.zero_grad()\n\n            train_losses.append(loss.item())\n            preds = outputs.argmax(dim=-1).detach().cpu().tolist()\n            pred_labels.extend(preds)\n            true_labels.extend(labels.detach().cpu().tolist())\n            global_step += 1\n\n        train_acc = accuracy_score(true_labels, pred_labels)\n        train_f1 = f1_score(true_labels, pred_labels, average=\"weighted\")\n        train_loss = sum(train_losses) / len(train_losses)\n\n        # Validation ---------------------------------------------------------\n        model.eval()\n        val_losses = []\n        val_true, val_pred = [], []\n        start_inf = time.time()\n        with torch.no_grad():\n            for step, batch in enumerate(val_loader):\n                if trial_mode and step > 1:\n                    break\n                labels = batch.pop(\"labels\").to(device)\n                for k in batch:\n                    batch[k] = batch[k].to(device)\n                outputs = model(batch)\n                loss = criterion(outputs, labels)\n                val_losses.append(loss.item())\n                preds = outputs.argmax(dim=-1).detach().cpu().tolist()\n                val_pred.extend(preds)\n                val_true.extend(labels.detach().cpu().tolist())\n        inference_time = (time.time() - start_inf) / max(1, len(val_loader))\n        val_acc = accuracy_score(val_true, val_pred)\n        val_f1 = f1_score(val_true, val_pred, average=\"weighted\")\n        val_loss = sum(val_losses) / len(val_losses)\n\n        log_dict = {\n            \"epoch\": epoch,\n            \"train_loss\": train_loss,\n            \"val_loss\": val_loss,\n            \"train_acc\": train_acc,\n            \"val_acc\": val_acc,\n            \"train_f1\": train_f1,\n            \"val_f1\": val_f1,\n            \"inference_time\": inference_time,\n        }\n        if wandb_mode != \"disabled\":\n            wandb.log(log_dict, step=epoch)\n        print(f\"Epoch {epoch}: {log_dict}\")\n\n    if wandb_mode != \"disabled\":\n        wandb.finish()\n\n\nif __name__ == \"__main__\":\n    train()\n",
+    "evaluate_py": "import argparse\nimport os\nimport json\nfrom pathlib import Path\nfrom typing import Dict\n\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport wandb\n\n\nFIGURE_DIR = \"images\"\nDATA_DIR = \"wandb_data\"\n\n\ndef fetch_runs(entity: str, project: str):\n    api = wandb.Api()\n    return api.runs(f\"{entity}/{project}\")\n\n\ndef export_metrics(runs, out_dir: Path):\n    summaries = {}\n    out_dir.mkdir(parents=True, exist_ok=True)\n\n    for run in runs:\n        df = run.history(keys=[\"epoch\", \"train_loss\", \"val_loss\", \"train_acc\", \"val_acc\", \"train_f1\", \"val_f1\"], pandas=True)\n        csv_path = out_dir / f\"run_{run.name}_metrics.csv\"\n        df.to_csv(csv_path, index=False)\n        summaries[run.name] = {\n            \"best_val_acc\": df[\"val_acc\"].max(),\n            \"best_val_f1\": df[\"val_f1\"].max(),\n            \"final_val_acc\": df[\"val_acc\"].iloc[-1],\n            \"final_val_f1\": df[\"val_f1\"].iloc[-1],\n        }\n    with open(out_dir / \"summary.json\", \"w\") as f:\n        json.dump(summaries, f, indent=2)\n    return summaries\n\n\ndef plot_learning_curves(runs, dest: Path):\n    dest.mkdir(parents=True, exist_ok=True)\n    for run in runs:\n        df = run.history(keys=[\"epoch\", \"train_loss\", \"val_loss\", \"train_acc\", \"val_acc\"], pandas=True)\n        fig, ax = plt.subplots(figsize=(6, 4))\n        ax.plot(df[\"epoch\"], df[\"train_loss\"], label=\"Train Loss\")\n        ax.plot(df[\"epoch\"], df[\"val_loss\"], label=\"Val Loss\")\n        ax.set_title(f\"Loss Curve - {run.name}\")\n        ax.set_xlabel(\"Epoch\")\n        ax.set_ylabel(\"Loss\")\n        ax.legend()\n        fig.tight_layout()\n        fname = dest / f\"loss_curve_{run.name}.pdf\"\n        fig.savefig(fname)\n        print(fname.name)\n\n        fig, ax = plt.subplots(figsize=(6, 4))\n        ax.plot(df[\"epoch\"], df[\"train_acc\"], label=\"Train Acc\")\n        ax.plot(df[\"epoch\"], df[\"val_acc\"], label=\"Val Acc\")\n        ax.set_title(f\"Accuracy Curve - {run.name}\")\n        ax.set_xlabel(\"Epoch\")\n        ax.set_ylabel(\"Accuracy\")\n        ax.legend()\n        fig.tight_layout()\n        fname = dest / f\"acc_curve_{run.name}.pdf\"\n        fig.savefig(fname)\n        print(fname.name)\n\n\n\ndef plot_comparison(summary: Dict[str, Dict], dest: Path):\n    dest.mkdir(parents=True, exist_ok=True)\n    df = pd.DataFrame.from_dict(summary, orient=\"index\")\n    fig, ax = plt.subplots(figsize=(8, 4))\n    sns.barplot(data=df.reset_index(), x=\"index\", y=\"best_val_acc\", ax=ax)\n    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha=\"right\")\n    ax.set_title(\"Best Validation Accuracy Across Runs\")\n    for p in ax.patches:\n        ax.annotate(f\"{p.get_height():.2f}\", (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 5), textcoords='offset points')\n    fig.tight_layout()\n    fname = dest / \"comparison_best_val_acc.pdf\"\n    fig.savefig(fname)\n    print(fname.name)\n\n\nif __name__ == \"__main__\":\n    parser = argparse.ArgumentParser(description=\"Evaluate WandB experiments and generate figures.\")\n    parser.add_argument(\"results_dir\", type=str, help=\"Directory containing experiment metadata\")\n    args = parser.parse_args()\n\n    results_path = Path(args.results_dir)\n    config_path = results_path / \"config.yaml\"\n    if not config_path.exists():\n        raise FileNotFoundError(f\"Expected config.yaml at {config_path}\")\n\n    import yaml\n    with open(config_path, \"r\") as f:\n        cfg = yaml.safe_load(f)\n\n    entity = cfg[\"wandb\"][\"entity\"]\n    project = cfg[\"wandb\"][\"project\"]\n\n    runs = fetch_runs(entity, project)\n\n    data_dir = results_path / DATA_DIR\n    summary = export_metrics(runs, data_dir)\n\n    fig_dir = results_path / FIGURE_DIR\n    plot_learning_curves(runs, fig_dir)\n    plot_comparison(summary, fig_dir)\n",
+    "preprocess_py": "from typing import Tuple, Optional\nimport math\nimport random\n\nimport torch\nfrom torch.utils.data import DataLoader, random_split, Subset\nfrom torchvision import datasets as tv_datasets, transforms\nfrom transformers import AutoTokenizer\nfrom datasets import load_dataset, Dataset as HFDataset\n\n\nclass CIFAR10DatasetWrapper(torch.utils.data.Dataset):\n    \"\"\"Returns (pixel_values, label) suitable for our model.\"\"\"\n\n    def __init__(self, base_dataset, transform):\n        self.base_dataset = base_dataset\n        self.transform = transform\n\n    def __len__(self):\n        return len(self.base_dataset)\n\n    def __getitem__(self, idx):\n        img, label = self.base_dataset[idx]\n        img = self.transform(img)\n        return {\"pixel_values\": img, \"labels\": torch.tensor(label, dtype=torch.long)}\n\n\ndef _split_dataset(dataset, splits: Tuple[float, float, float]):\n    n_total = len(dataset)\n    n_train = int(splits[0] * n_total)\n    n_val = int(splits[1] * n_total)\n    n_test = n_total - n_train - n_val\n    return random_split(dataset, [n_train, n_val, n_test], generator=torch.Generator().manual_seed(42))\n\n\ndef _build_cifar10(cfg, trial_mode=False):\n    patch_size = cfg.model.vision_patch.patch_size\n    resize_size = cfg.dataset.preprocessing.resize\n    batch_size = 2 if trial_mode else cfg.training.batch_size\n\n    transform_train = transforms.Compose([\n        transforms.RandomCrop(resize_size, padding=4) if \"random_crop\" in cfg.dataset.preprocessing.augmentations else transforms.Resize(resize_size),\n        transforms.RandomHorizontalFlip() if \"horizontal_flip\" in cfg.dataset.preprocessing.augmentations else transforms.Lambda(lambda x: x),\n        transforms.ToTensor(),\n    ])\n    transform_eval = transforms.Compose([\n        transforms.Resize(resize_size),\n        transforms.ToTensor(),\n    ])\n\n    base_train = tv_datasets.CIFAR10(root=\".cache/\", train=True, download=True)\n    base_test = tv_datasets.CIFAR10(root=\".cache/\", train=False, download=True)\n    full_dataset = torch.utils.data.ConcatDataset([base_train, base_test])\n\n    train_set, val_set, test_set = _split_dataset(full_dataset, (cfg.dataset.split.train, cfg.dataset.split.val, cfg.dataset.split.test))\n\n    # Wrap with transforms\n    train_set = CIFAR10DatasetWrapper(train_set, transform_train)\n    val_set = CIFAR10DatasetWrapper(val_set, transform_eval)\n    test_set = CIFAR10DatasetWrapper(test_set, transform_eval)\n\n    loader_kwargs = dict(batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=True)\n    train_loader = DataLoader(train_set, **loader_kwargs)\n    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=True)\n    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=True)\n\n    return train_loader, val_loader, test_loader, None\n\n\ndef _encode_text(examples, tokenizer, max_length):\n    texts = [f\"Instruction: {ins} Input: {inp}\" for ins, inp in zip(examples[\"instruction\"], examples.get(\"input\", [\"\"] * len(examples)))]\n    encodings = tokenizer(texts, truncation=True, padding=\"max_length\", max_length=max_length)\n    encodings[\"labels\"] = [random.randint(0, 1) for _ in range(len(texts))]  # Dummy labels if not provided\n    return encodings\n\n\ndef _build_alpaca(cfg, trial_mode=False):\n    tokenizer = AutoTokenizer.from_pretrained(cfg.model.name, cache_dir=\".cache/\")\n    max_len = cfg.dataset.max_length\n    raw_dataset = load_dataset(\"yahma/alpaca-cleaned\", split=\"train\", cache_dir=\".cache/\")\n\n    # Encode\n    encoded = raw_dataset.map(lambda ex: _encode_text(ex, tokenizer, max_len), batched=True, remove_columns=raw_dataset.column_names)\n    encoded.set_format(type=\"torch\", columns=[\"input_ids\", \"attention_mask\", \"labels\"])\n\n    train_size = int(cfg.dataset.split.train * len(encoded))\n    val_size = int(cfg.dataset.split.val * len(encoded))\n    test_size = len(encoded) - train_size - val_size\n    train_dataset, val_dataset, test_dataset = random_split(encoded, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(42))\n\n    batch_size = 2 if trial_mode else cfg.training.batch_size\n    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)\n    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)\n    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)\n\n    return train_loader, val_loader, test_loader, tokenizer\n\n\ndef build_dataloaders(cfg, trial_mode=False):\n    name = cfg.dataset.name.lower()\n    if name == \"cifar10\":\n        return _build_cifar10(cfg, trial_mode)\n    elif name == \"alpaca-cleaned\":\n        return _build_alpaca(cfg, trial_mode)\n    else:\n        raise ValueError(f\"Unsupported dataset {name}\")\n",
+    "model_py": "import torch\nfrom torch import nn\nfrom transformers import DistilBertModel, AutoTokenizer\n\n\nclass HoulsbyAdapter(nn.Module):\n    def __init__(self, hidden_dim: int, reduction_factor: int = 16, non_linearity: str = \"relu\"):\n        super().__init__()\n        bottleneck_dim = max(1, hidden_dim // reduction_factor)\n        self.down = nn.Linear(hidden_dim, bottleneck_dim)\n        self.act = getattr(nn, non_linearity.capitalize())() if hasattr(nn, non_linearity.capitalize()) else nn.ReLU()\n        self.up = nn.Linear(bottleneck_dim, hidden_dim)\n\n    def forward(self, x):\n        return self.up(self.act(self.down(x)))\n\n\nclass VisionPatchEmbedding(nn.Module):\n    def __init__(self, img_channels: int = 3, patch_size: int = 4, embed_dim: int = 768):\n        super().__init__()\n        self.patch_size = patch_size\n        self.proj = nn.Linear(img_channels * patch_size * patch_size, embed_dim)\n\n    def forward(self, images):\n        B, C, H, W = images.shape\n        p = self.patch_size\n        assert H % p == 0 and W % p == 0, \"Image dimensions must be divisible by patch size\"\n        patches = images.unfold(2, p, p).unfold(3, p, p)  # B,C,H',W',p,p\n        patches = patches.contiguous().view(B, C, -1, p, p)\n        patches = patches.permute(0, 2, 1, 3, 4).contiguous()  # B, N, C, p, p\n        patches = patches.view(B, patches.size(1), -1)  # B,N,C*p*p\n        embeddings = self.proj(patches)\n        return embeddings  # B, N, D\n\n\nclass DistilBertClassifier(nn.Module):\n    def __init__(self, model_name: str, num_labels: int, adapter_cfg=None, vision_patch_cfg=None):\n        super().__init__()\n        self.is_vision = vision_patch_cfg is not None\n        self.bert = DistilBertModel.from_pretrained(model_name, cache_dir=\".cache/\")\n        hidden_dim = self.bert.config.hidden_size\n        if adapter_cfg and adapter_cfg.get(\"enabled\", False):\n            self.adapter = HoulsbyAdapter(hidden_dim, reduction_factor=adapter_cfg.reduction_factor, non_linearity=adapter_cfg.non_linearity)\n        else:\n            self.adapter = None\n        self.pre_classifier = nn.Linear(hidden_dim, hidden_dim)\n        self.activation = nn.GELU()\n        self.dropout = nn.Dropout(0.2)\n        self.classifier = nn.Linear(hidden_dim, num_labels)\n        if self.is_vision:\n            self.vision_embedding = VisionPatchEmbedding(patch_size=vision_patch_cfg.patch_size, embed_dim=hidden_dim)\n\n    def forward(self, batch):\n        if self.is_vision and \"pixel_values\" in batch:\n            embeddings = self.vision_embedding(batch[\"pixel_values\"])  # B,N,D\n            attention_mask = torch.ones(embeddings.size()[:-1], dtype=torch.long, device=embeddings.device)\n            outputs = self.bert(inputs_embeds=embeddings, attention_mask=attention_mask)\n            pooled = outputs.last_hidden_state[:, 0]  # First token\n        else:  # Text path\n            outputs = self.bert(input_ids=batch[\"input_ids\"], attention_mask=batch[\"attention_mask\"])\n            pooled = outputs.last_hidden_state[:, 0]\n        if self.adapter is not None:\n            pooled = pooled + self.adapter(pooled)\n        x = self.pre_classifier(pooled)\n        x = self.activation(x)\n        x = self.dropout(x)\n        logits = self.classifier(x)\n        return logits\n\n\ndef build_model(cfg, tokenizer=None):\n    adapter_cfg = cfg.model.task_adapters if cfg.method == \"proposed\" else None\n    vision_patch_cfg = cfg.model.vision_patch if cfg.model.get(\"input_representation\", \"text\") == \"image_sequence\" else None\n    model = DistilBertClassifier(cfg.model.name, cfg.model.num_labels, adapter_cfg=adapter_cfg, vision_patch_cfg=vision_patch_cfg)\n    return model\n",
+    "main_py": "import subprocess\nimport sys\nfrom pathlib import Path\nfrom typing import List\n\nimport hydra\nfrom omegaconf import OmegaConf\n\n\n@hydra.main(config_path=\"../config\")\ndef main(cfg):\n    # Build command for subprocess call to train.py\n    cmd: List[str] = [sys.executable, \"-u\", \"-m\", \"src.train\", f\"run={cfg.run.run_id}\"]\n\n    if cfg.get(\"results_dir\"):\n        cmd.append(f\"results_dir={cfg.results_dir}\")\n    if cfg.get(\"trial_mode\", False):\n        cmd.extend([\"trial_mode=true\", \"wandb.mode=disabled\", \"optuna.n_trials=0\"])\n\n    # Forward additional overrides from command line not present in defaults\n    extra = hydra.utils.get_args()\n    cmd.extend(extra)\n\n    print(\"Executing sub-process:\", \" \".join(cmd))\n    subprocess.check_call(cmd)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+    "pyproject_toml": "[project]\nname = \"distilbert-adapter-exp\"\nversion = \"0.1.0\"\ndescription = \"Experiment code for DistilBERT adapters across tasks\"\nrequires-python = \">=3.9\"\n\n[project.dependencies]\ntorch = \">=2.0.0\"\ntransformers = \">=4.35.0\"\ndatasets = \">=2.14.0\"\ntorchvision = \">=0.15.0\"\nhydra-core = \"^1.3.2\"\nwandb = \"^0.15.0\"\nscikit-learn = \"^1.3.0\"\nmatplotlib = \"^3.8.0\"\nseaborn = \"^0.13.0\"\noptuna = \"^3.3.0\"\n\n[tool.setuptools.packages.find]\nwhere = [\"src\"]\n",
+    "config_yaml": "defaults:\n  - run: proposed-DistilBERT-base-66M-CIFAR-10\n  - _self_\n\n# Global settings\nwandb:\n  entity: gengaru617-personal\n  project: 251017-test\n  mode: online  # will be overridden to \"disabled\" in trial_mode\n\n# Trial mode flag (overwritten via CLI)\ntrial_mode: false\n\n# Results directory (passed via CLI)\nresults_dir: outputs/\n\nhydra:\n  run:\n    dir: .\n  output_subdir: null"
+}
