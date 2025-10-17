@@ -8,3 +8,13 @@ Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-mats
 === [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:11:35 AM UTC 2025 ===
 Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.256649136543274, 'train_acc': 0.25, 'val_acc': 0.25, 'train_f1': 0.16666666666666666, 'val_f1': 0.1, 'best_val_acc': 0.25, 'best_val_f1': 0.1, 'inference_time': 8.803949356079102e-05}
 Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:12:14 AM UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:12:19 AM UTC 2025 ===
+Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.941898136640074e-05}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:13:07 AM UTC 2025 ===
+Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 0.00010171951798051366}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:14:35 AM UTC 2025 ===
+Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 8.226832061130812e-05}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
