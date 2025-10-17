@@ -1,0 +1,123 @@
+
+Input:
+You are an AI research assistant tasked with generating Hydra configuration files for experiment runs.
+
+# Task
+Generate individual YAML configuration files for each experiment run. These configs will be used by Hydra to configure specific experimental variations.
+
+# Input Information
+
+## Research Method
+We compare DistilBERT with task-specific adapters (proposed) against standard fine-tuning (comparative) across vision and language tasks to evaluate performance improvements.
+
+## Experimental Design
+{'experiment_summary': 'Comparative analysis of DistilBERT performance across vision and language tasks', 'evaluation_metrics': ['accuracy', 'f1_score', 'inference_time'], 'proposed_method': 'Fine-tuned DistilBERT with task-specific adapters', 'comparative_methods': ['Standard DistilBERT fine-tuning'], 'models_to_use': ['DistilBERT-base-66M'], 'datasets_to_use': ['CIFAR-10', 'alpaca-cleaned'], 'hyperparameters_to_search': None, 'external_resources': None, 'experiment_code': None}
+
+## Experiment Runs
+
+- Run ID: proposed-DistilBERT-base-66M-CIFAR-10
+  Method: proposed
+  Model: DistilBERT-base-66M
+  Dataset: CIFAR-10
+
+- Run ID: proposed-DistilBERT-base-66M-alpaca-cleaned
+  Method: proposed
+  Model: DistilBERT-base-66M
+  Dataset: alpaca-cleaned
+
+- Run ID: comparative-1-DistilBERT-base-66M-CIFAR-10
+  Method: comparative-1
+  Model: DistilBERT-base-66M
+  Dataset: CIFAR-10
+
+- Run ID: comparative-1-DistilBERT-base-66M-alpaca-cleaned
+  Method: comparative-1
+  Model: DistilBERT-base-66M
+  Dataset: alpaca-cleaned
+
+
+# Requirements
+
+## Configuration Structure
+Each run configuration should include:
+- run_id: Unique identifier for this run
+- method: The method name (baseline, proposed, ablation, etc.)
+- model: Model-specific parameters (name, architecture details, hyperparameters)
+- dataset: Dataset-specific parameters (name, preprocessing settings, split ratios)
+- training: Training hyperparameters (learning rate, batch size, epochs, optimizer settings)
+- optuna: Hyperparameter search space definition for Optuna optimization
+  - Define search spaces for key hyperparameters using Optuna's suggest methods
+  - Example: learning_rate: [1e-5, 1e-3], batch_size: [16, 32, 64]
+- Any other experiment-specific settings
+
+## Format
+- Generate one YAML configuration per experiment run
+- Ensure valid YAML syntax
+- Use meaningful parameter values based on the research method and experimental design
+
+## Example Configuration
+```yaml
+run_id: baseline_bert_imdb
+method: baseline
+model:
+  name: bert-base-uncased
+  hidden_size: 768
+  num_layers: 12
+dataset:
+  name: imdb
+  max_length: 512
+  batch_size: 32
+training:
+  learning_rate: 2e-5
+  epochs: 3
+  optimizer: adamw
+  warmup_steps: 500
+optuna:
+  n_trials: 20
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1e-5
+      high: 1e-3
+    batch_size:
+      type: categorical
+      choices: [16, 32, 64]
+```
+
+# Experimental Environment
+cpu
+RAM：500 MB
+
+# Instructions
+1. Generate one YAML configuration for each experiment run listed above
+2. Ensure configurations reflect the differences between baseline, proposed, and ablation methods
+3. Use appropriate hyperparameters based on the experimental design
+4. Include Optuna search space if hyperparameter optimization is beneficial for the experiment
+5. For Optuna search spaces, use appropriate distribution types:
+   - loguniform: For learning rates, regularization parameters
+   - uniform: For dropout rates, weight decay
+   - int: For hidden dimensions, number of layers
+   - categorical: For discrete choices like batch size, optimizer type
+
+Generate the configurations now:
+Output:
+{
+  "run_configs": [
+    {
+      "run_id": "proposed-DistilBERT-base-66M-CIFAR-10",
+      "run_config_yaml": "run_id: proposed-DistilBERT-base-66M-CIFAR-10\nmethod: proposed\nmodel:\n  name: distilbert-base-66M\n  task_adapters:\n    enabled: true\n    adapter_type: houlsby\n    reduction_factor: 16\n    non_linearity: relu\n  num_labels: 10\n  input_representation: image_sequence\n  vision_patch:\n    patch_size: 4\ndataset:\n  name: cifar10\n  split:\n    train: 0.8\n    val: 0.1\n    test: 0.1\n  preprocessing:\n    resize: 32\n    augmentations:\n      - random_crop\n      - horizontal_flip\ntraining:\n  optimizer: adamw\n  learning_rate: 1e-4\n  batch_size: 16\n  epochs: 20\n  weight_decay: 0.01\n  warmup_steps: 500\n  max_grad_norm: 1.0\n  gradient_accumulation_steps: 1\nevaluation:\n  metrics:\n    - accuracy\n    - f1_score\n    - inference_time\noptuna:\n  n_trials: 25\n  direction: maximize\n  search_space:\n    learning_rate:\n      type: loguniform\n      low: 1e-5\n      high: 5e-4\n    batch_size:\n      type: categorical\n      choices:\n        - 8\n        - 16\n        - 32\n    adapter_reduction_factor:\n      type: int\n      low: 4\n      high: 32\n      step: 4\n    weight_decay:\n      type: uniform\n      low: 0.0\n      high: 0.1\n"
+    },
+    {
+      "run_id": "proposed-DistilBERT-base-66M-alpaca-cleaned",
+      "run_config_yaml": "run_id: proposed-DistilBERT-base-66M-alpaca-cleaned\nmethod: proposed\nmodel:\n  name: distilbert-base-66M\n  task_adapters:\n    enabled: true\n    adapter_type: houlsby\n    reduction_factor: 16\n    non_linearity: relu\n  num_labels: 2\ndataset:\n  name: alpaca-cleaned\n  max_length: 512\n  split:\n    train: 0.8\n    val: 0.1\n    test: 0.1\ntraining:\n  optimizer: adamw\n  learning_rate: 5e-5\n  batch_size: 8\n  epochs: 3\n  weight_decay: 0.01\n  warmup_steps: 500\n  max_grad_norm: 1.0\nevaluation:\n  metrics:\n    - accuracy\n    - f1_score\n    - inference_time\noptuna:\n  n_trials: 25\n  direction: maximize\n  search_space:\n    learning_rate:\n      type: loguniform\n      low: 1e-5\n      high: 3e-4\n    batch_size:\n      type: categorical\n      choices:\n        - 4\n        - 8\n        - 16\n    adapter_reduction_factor:\n      type: int\n      low: 4\n      high: 32\n      step: 4\n    weight_decay:\n      type: uniform\n      low: 0.0\n      high: 0.1\n"
+    },
+    {
+      "run_id": "comparative-1-DistilBERT-base-66M-CIFAR-10",
+      "run_config_yaml": "run_id: comparative-1-DistilBERT-base-66M-CIFAR-10\nmethod: comparative-1\nmodel:\n  name: distilbert-base-66M\n  adapter: null\n  num_labels: 10\n  input_representation: image_sequence\n  vision_patch:\n    patch_size: 4\ndataset:\n  name: cifar10\n  split:\n    train: 0.8\n    val: 0.1\n    test: 0.1\n  preprocessing:\n    resize: 32\n    augmentations:\n      - random_crop\n      - horizontal_flip\ntraining:\n  optimizer: adamw\n  learning_rate: 2e-4\n  batch_size: 16\n  epochs: 20\n  weight_decay: 0.01\n  warmup_steps: 500\n  max_grad_norm: 1.0\n  gradient_accumulation_steps: 1\nevaluation:\n  metrics:\n    - accuracy\n    - f1_score\n    - inference_time\noptuna:\n  n_trials: 25\n  direction: maximize\n  search_space:\n    learning_rate:\n      type: loguniform\n      low: 1e-5\n      high: 5e-4\n    batch_size:\n      type: categorical\n      choices:\n        - 8\n        - 16\n        - 32\n    weight_decay:\n      type: uniform\n      low: 0.0\n      high: 0.1\n"
+    },
+    {
+      "run_id": "comparative-1-DistilBERT-base-66M-alpaca-cleaned",
+      "run_config_yaml": "run_id: comparative-1-DistilBERT-base-66M-alpaca-cleaned\nmethod: comparative-1\nmodel:\n  name: distilbert-base-66M\n  adapter: null\n  num_labels: 2\ndataset:\n  name: alpaca-cleaned\n  max_length: 512\n  split:\n    train: 0.8\n    val: 0.1\n    test: 0.1\ntraining:\n  optimizer: adamw\n  learning_rate: 2e-4\n  batch_size: 8\n  epochs: 3\n  weight_decay: 0.01\n  warmup_steps: 500\n  max_grad_norm: 1.0\nevaluation:\n  metrics:\n    - accuracy\n    - f1_score\n    - inference_time\noptuna:\n  n_trials: 25\n  direction: maximize\n  search_space:\n    learning_rate:\n      type: loguniform\n      low: 1e-5\n      high: 3e-4\n    batch_size:\n      type: categorical\n      choices:\n        - 4\n        - 8\n        - 16\n    weight_decay:\n      type: uniform\n      low: 0.0\n      high: 0.1\n"
+    }
+  ]
+}
