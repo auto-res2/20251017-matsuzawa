@@ -45,6 +45,8 @@ jobs:
           trial_mode=true \
           > >(tee -a "$RESULTS_DIR/stdout.txt") \
           2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
+
+        echo -e "=== [TRIAL RUN] END for ${RUN_ID_PLACEHOLDER} at $(date -u) ===\n" | tee -a "$RESULTS_DIR/stdout.txt"
       SEARCH_HF_COMMAND: |
         curl -s -G \
           -H "Authorization: Bearer $HF_TOKEN" \
