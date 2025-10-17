@@ -1,6 +1,9 @@
 """Dataset preprocessing and DataLoader construction."""
 from typing import Tuple, List
 import random
+import os
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import torch
 from torch.utils.data import DataLoader, random_split, ConcatDataset
@@ -81,7 +84,7 @@ def _build_cifar10(cfg, trial_mode: bool):
     test_set = _HFCIFARWrapper(test_indices, hf_dataset, transforms.Compose(tfm_eval))
 
     bs = 2 if trial_mode else int(cfg.training.batch_size)
-    dl_kwargs = dict(batch_size=bs, num_workers=2, pin_memory=True)
+    dl_kwargs = dict(batch_size=bs, num_workers=0, pin_memory=True)
     return (
         DataLoader(train_set, shuffle=True, **dl_kwargs),
         DataLoader(val_set, shuffle=False, **dl_kwargs),
@@ -130,7 +133,7 @@ def _build_alpaca(cfg, trial_mode: bool):
     )
 
     bs = 2 if trial_mode else int(cfg.training.batch_size)
-    dl_kwargs = dict(batch_size=bs, num_workers=2, pin_memory=True)
+    dl_kwargs = dict(batch_size=bs, num_workers=0, pin_memory=True)
     return (
         DataLoader(train_ds, shuffle=True, **dl_kwargs),
         DataLoader(val_ds, shuffle=False, **dl_kwargs),
