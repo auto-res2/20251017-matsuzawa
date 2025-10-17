@@ -106,6 +106,14 @@ huggingface/tokenizers: The current process just got forked, after parallelism h
 To disable this warning, you can either:
 	- Avoid using `tokenizers` before the fork if possible
 	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
 
 # Standard Output:
 === [TRIAL RUN] Start for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:10:02 AM UTC 2025 ===
@@ -128,6 +136,18 @@ Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-mats
 === [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:14:35 AM UTC 2025 ===
 Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 8.226832061130812e-05}
 Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:24:09 AM UTC 2025 ===
+Epoch 1: {'epoch': 1, 'train_loss': 2.347809076309204, 'val_loss': 2.3752623796463013, 'train_acc': 0.0, 'val_acc': 0.0, 'train_f1': 0.0, 'val_f1': 0.0, 'best_val_acc': 0.0, 'best_val_f1': 0.0, 'inference_time': 9.00411605834961e-05}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] END for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:24:45 AM UTC 2025 ===
+
+=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:25:07 AM UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:26:08 AM UTC 2025 ===
+Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.256649136543274, 'train_acc': 0.25, 'val_acc': 0.25, 'train_f1': 0.16666666666666666, 'val_f1': 0.1, 'best_val_acc': 0.25, 'best_val_f1': 0.1, 'inference_time': 7.387371063232421e-05}
+Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
+=== [TRIAL RUN] END for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:26:26 AM UTC 2025 ===
+
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:26:49 AM UTC 2025 ===
 
 Output:
 {
