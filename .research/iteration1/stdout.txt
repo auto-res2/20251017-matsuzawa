@@ -29,3 +29,4 @@ Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.2566491365
 Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
 === [TRIAL RUN] END for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:26:26 AM UTC 2025 ===
 
+=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:26:49 AM UTC 2025 ===
