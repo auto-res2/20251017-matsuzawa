@@ -1,0 +1,17 @@
+defaults:
+  - run: proposed-DistilBERT-base-66M-CIFAR-10  # default run, override via CLI
+  - _self_
+
+wandb:
+  entity: gengaru617-personal
+  project: 251017-test
+  mode: online  # will be overridden to "disabled" automatically in trial_mode
+
+trial_mode: false  # enable via CLI for CI validation
+
+results_dir: outputs/
+
+hydra:
+  run:
+    dir: .
+  output_subdir: null

@@ -1,0 +1,44 @@
+run_id: comparative-1-DistilBERT-base-66M-alpaca-cleaned
+method: comparative-1
+model:
+  name: distilbert-base-66M
+  adapter: null
+  num_labels: 2
+dataset:
+  name: alpaca-cleaned
+  max_length: 512
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+training:
+  optimizer: adamw
+  learning_rate: 2e-4
+  batch_size: 8
+  epochs: 3
+  weight_decay: 0.01
+  warmup_steps: 500
+  max_grad_norm: 1.0
+evaluation:
+  metrics:
+    - accuracy
+    - f1_score
+    - inference_time
+optuna:
+  n_trials: 25
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 1e-5
+      high: 3e-4
+    batch_size:
+      type: categorical
+      choices:
+        - 4
+        - 8
+        - 16
+    weight_decay:
+      type: uniform
+      low: 0.0
+      high: 0.1
