@@ -1,20 +1,10 @@
-=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:53:22 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 2.347809076309204, 'val_loss': 2.3752623796463013, 'train_acc': 0.0, 'val_acc': 0.0, 'train_f1': 0.0, 'val_f1': 0.0, 'best_val_acc': 0.0, 'best_val_f1': 0.0, 'inference_time': 9.618997573852539e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:53:59 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:54:17 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 0.6441566944122314, 'val_loss': 0.6191309094429016, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.782863363416338e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:54:47 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:55:04 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.256649136543274, 'train_acc': 0.25, 'val_acc': 0.25, 'train_f1': 0.16666666666666666, 'val_f1': 0.1, 'best_val_acc': 0.25, 'best_val_f1': 0.1, 'inference_time': 7.935733795166015e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:55:22 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:55:46 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.874011486354162e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 07:56:15 AM UTC 2025 ===
-
+=== [FULL EXPERIMENT] Start for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 07:58:50 AM UTC 2025 ===
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+[I 2025-10-17 07:59:17,444] A new study created in RDB with name: comparative-1-DistilBERT-base-66M-CIFAR-10
+Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  17%|█▋        | 8600/50000 [00:00<00:00, 72872.36 examples/s]Generating train split:  50%|████▉     | 24900/50000 [00:00<00:00, 121196.56 examples/s]Generating train split:  85%|████████▌ | 42600/50000 [00:00<00:00, 139040.63 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 88583.56 examples/s] 
+Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 76108.69 examples/s]
+[I 2025-10-17 08:06:09,658] Trial 0 finished with value: 0.1018 and parameters: {'learning_rate': 0.00015165204116942679, 'batch_size': 8, 'weight_decay': 0.021974746661209868}. Best is trial 0 with value: 0.1018.
+[I 2025-10-17 08:08:45,922] Trial 1 finished with value: 0.429 and parameters: {'learning_rate': 0.00015931859282133513, 'batch_size': 32, 'weight_decay': 0.014045554723232812}. Best is trial 1 with value: 0.429.
