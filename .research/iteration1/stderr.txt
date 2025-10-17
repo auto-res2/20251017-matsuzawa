@@ -1,0 +1,109 @@
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+Error executing job with overrides: ['run=proposed-DistilBERT-base-66M-alpaca-cleaned', 'results_dir=.research/iteration1', 'wandb.mode=disabled', 'trial_mode=true', 'wandb.mode=disabled']
+Traceback (most recent call last):
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 407, in hf_raise_for_status
+    response.raise_for_status()
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://huggingface.co/distilbert-base-66M/resolve/main/tokenizer_config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 479, in cached_files
+    hf_hub_download(
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1010, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1117, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1658, in _raise_on_head_call_error
+    raise head_call_error
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1546, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1463, in get_hf_file_metadata
+    r = _request_wrapper(
+        ^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 286, in _request_wrapper
+    response = _request_wrapper(
+               ^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 310, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 457, in hf_raise_for_status
+    raise _format(RepositoryNotFoundError, message, response) from e
+huggingface_hub.errors.RepositoryNotFoundError: 404 Client Error. (Request ID: Root=1-68f1dd9b-4545f55c70b3664b261b4b55;46425ca0-8ff5-49dd-a123-d0f122c655d3)
+
+Repository Not Found for url: https://huggingface.co/distilbert-base-66M/resolve/main/tokenizer_config.json.
+Please make sure you specified the correct `repo_id` and `repo_type`.
+If you are trying to access a private or gated repo, make sure you are authenticated. For more details, see https://huggingface.co/docs/huggingface_hub/authentication
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/src/train.py", line 262, in main
+    _train_eval(flat_cfg, trial=None, verbose=True)
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/src/train.py", line 57, in _train_eval
+    train_loader, val_loader, _, tokenizer = build_dataloaders(cfg, trial_mode=trial_mode)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/src/preprocess.py", line 129, in build_dataloaders
+    return _build_alpaca(cfg, trial_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/src/preprocess.py", line 91, in _build_alpaca
+    tokenizer = AutoTokenizer.from_pretrained(cfg.model.name, cache_dir=".cache/")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/transformers/models/auto/tokenization_auto.py", line 1073, in from_pretrained
+    tokenizer_config = get_tokenizer_config(pretrained_model_name_or_path, **kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/transformers/models/auto/tokenization_auto.py", line 905, in get_tokenizer_config
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 322, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 511, in cached_files
+    raise OSError(
+OSError: distilbert-base-66M is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo either by logging in with `hf auth login` or by passing `token=<your_token>`
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+Error executing job with overrides: ['run=proposed-DistilBERT-base-66M-alpaca-cleaned', 'results_dir=.research/iteration1', 'wandb.mode=disabled', 'trial_mode=true']
+Traceback (most recent call last):
+  File "/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/src/main.py", line 23, in main
+    subprocess.check_call(cmd)
+  File "/home/toma/.local/share/uv/python/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/subprocess.py", line 413, in check_call
+    raise CalledProcessError(retcode, cmd)
+subprocess.CalledProcessError: Command '['/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3', '-u', '-m', 'src.train', 'run=proposed-DistilBERT-base-66M-alpaca-cleaned', 'results_dir=.research/iteration1', 'wandb.mode=disabled', 'trial_mode=true', 'wandb.mode=disabled']' returned non-zero exit status 1.
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+/home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+  warnings.warn(
+Generating train split:   0%|          | 0/51760 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 51760/51760 [00:00<00:00, 122057.00 examples/s]Generating train split: 100%|██████████| 51760/51760 [00:00<00:00, 102447.48 examples/s]
+Map:   0%|          | 0/51760 [00:00<?, ? examples/s]Map:   2%|▏         | 1000/51760 [00:00<00:19, 2590.78 examples/s]Map:   4%|▍         | 2000/51760 [00:00<00:14, 3493.00 examples/s]Map:   6%|▌         | 3000/51760 [00:00<00:11, 4114.42 examples/s]Map:   8%|▊         | 4000/51760 [00:00<00:10, 4427.00 examples/s]Map:  10%|▉         | 5000/51760 [00:01<00:10, 4634.74 examples/s]Map:  12%|█▏        | 6000/51760 [00:01<00:09, 4891.64 examples/s]Map:  14%|█▎        | 7000/51760 [00:01<00:13, 3435.15 examples/s]Map:  15%|█▌        | 8000/51760 [00:02<00:11, 3886.00 examples/s]Map:  17%|█▋        | 9000/51760 [00:02<00:09, 4303.76 examples/s]Map:  19%|█▉        | 10000/51760 [00:02<00:09, 4559.20 examples/s]Map:  21%|██▏       | 11000/51760 [00:02<00:08, 4794.85 examples/s]Map:  23%|██▎       | 12000/51760 [00:02<00:07, 4995.59 examples/s]Map:  25%|██▌       | 13000/51760 [00:02<00:07, 5094.57 examples/s]Map:  27%|██▋       | 14000/51760 [00:03<00:07, 5184.19 examples/s]Map:  29%|██▉       | 15000/51760 [00:03<00:06, 5255.77 examples/s]Map:  31%|███       | 16000/51760 [00:03<00:06, 5266.42 examples/s]Map:  33%|███▎      | 17000/51760 [00:03<00:06, 5287.77 examples/s]Map:  35%|███▍      | 18000/51760 [00:03<00:06, 5366.21 examples/s]Map:  37%|███▋      | 19000/51760 [00:04<00:06, 5388.30 examples/s]Map:  39%|███▊      | 20000/51760 [00:04<00:05, 5392.65 examples/s]Map:  41%|████      | 21000/51760 [00:04<00:05, 5495.50 examples/s]Map:  43%|████▎     | 22000/51760 [00:04<00:05, 5451.59 examples/s]Map:  44%|████▍     | 23000/51760 [00:04<00:05, 5452.83 examples/s]Map:  46%|████▋     | 24000/51760 [00:04<00:05, 5520.78 examples/s]Map:  48%|████▊     | 25000/51760 [00:05<00:04, 5489.43 examples/s]Map:  50%|█████     | 26000/51760 [00:05<00:05, 5118.43 examples/s]Map:  52%|█████▏    | 27000/51760 [00:05<00:04, 5246.53 examples/s]Map:  54%|█████▍    | 28000/51760 [00:05<00:04, 5314.56 examples/s]Map:  56%|█████▌    | 29000/51760 [00:05<00:04, 5327.14 examples/s]Map:  58%|█████▊    | 30000/51760 [00:06<00:04, 5399.22 examples/s]Map:  60%|█████▉    | 31000/51760 [00:06<00:03, 5382.01 examples/s]Map:  62%|██████▏   | 32000/51760 [00:06<00:03, 5410.78 examples/s]Map:  64%|██████▍   | 33000/51760 [00:06<00:03, 5492.59 examples/s]Map:  66%|██████▌   | 34000/51760 [00:06<00:03, 5460.20 examples/s]Map:  68%|██████▊   | 35000/51760 [00:07<00:03, 5458.45 examples/s]Map:  70%|██████▉   | 36000/51760 [00:07<00:03, 4028.98 examples/s]Map:  71%|███████▏  | 37000/51760 [00:07<00:03, 4381.46 examples/s]Map:  73%|███████▎  | 38000/51760 [00:07<00:02, 4650.35 examples/s]Map:  75%|███████▌  | 39000/51760 [00:07<00:02, 4901.65 examples/s]Map:  77%|███████▋  | 40000/51760 [00:08<00:02, 5020.00 examples/s]Map:  79%|███████▉  | 41000/51760 [00:08<00:02, 4861.57 examples/s]Map:  81%|████████  | 42000/51760 [00:08<00:01, 5098.35 examples/s]Map:  83%|████████▎ | 43000/51760 [00:08<00:01, 5179.52 examples/s]Map:  85%|████████▌ | 44000/51760 [00:08<00:01, 5237.67 examples/s]Map:  87%|████████▋ | 45000/51760 [00:09<00:01, 5351.97 examples/s]Map:  89%|████████▉ | 46000/51760 [00:09<00:01, 5394.02 examples/s]Map:  91%|█████████ | 47000/51760 [00:09<00:00, 5370.20 examples/s]Map:  93%|█████████▎| 48000/51760 [00:09<00:00, 5456.06 examples/s]Map:  95%|█████████▍| 49000/51760 [00:09<00:00, 5434.36 examples/s]Map:  97%|█████████▋| 50000/51760 [00:10<00:00, 5440.40 examples/s]Map:  99%|█████████▊| 51000/51760 [00:10<00:00, 5514.49 examples/s]Map: 100%|██████████| 51760/51760 [00:10<00:00, 4975.33 examples/s]Map: 100%|██████████| 51760/51760 [00:10<00:00, 4816.70 examples/s]
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
