@@ -1,0 +1,10 @@
+{
+  "comparative-1-DistilBERT-base-66M-alpaca-cleaned": {
+    "best_val_acc": 1.0,
+    "best_val_f1": 1.0
+  },
+  "proposed-DistilBERT-base-66M-CIFAR-10": {
+    "best_val_acc": 0.7096,
+    "best_val_f1": 0.7088897320483043
+  }
+}

@@ -152,7 +152,7 @@ def _compute_improvement(summary: Dict[str, Dict]):
     improvement = {
         ds: {
             **vals,
-            "improvement_rate": ((vals.get("proposed") - vals.get("baseline")) / vals.get("baseline")) if vals.get("baseline") else None,
+            "improvement_rate": ((vals.get("proposed") - vals.get("baseline")) / vals.get("baseline")) if (vals.get("baseline") and vals.get("proposed")) else None,
         }
         for ds, vals in records.items()
     }
