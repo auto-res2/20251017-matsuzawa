@@ -206,7 +206,9 @@ def _apply_optuna_suggestions(cfg, trial: optuna.Trial, param_map: Dict[str, Seq
 def main(cfg):  # noqa: C901
     """Hydra-managed entrypoint. Handles Optuna & final training."""
 
+    print("Train.py main() starting...")
     _set_seed()
+    print("Seed set")
 
     # ---------------------------------------------------------------------
     # Flatten configuration: merge run-specific subtree into root namespace
@@ -248,6 +250,7 @@ def main(cfg):  # noqa: C901
             metrics = _train_eval(trial_cfg, trial=trial, verbose=False)
             return metrics["best_val_acc"]
 
+        print(f"Starting Optuna optimization with {int(flat_cfg.optuna.n_trials)} trials...")
         study.optimize(objective, n_trials=int(flat_cfg.optuna.n_trials), gc_after_trial=True)
         print(f"Optuna best params: {study.best_params}")
 

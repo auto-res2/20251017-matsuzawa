@@ -63,8 +63,8 @@ run:
 wandb:
   entity: gengaru617-personal
   project: 251017-test
-  mode: disabled
-trial_mode: true
+  mode: online
+trial_mode: false
 results_dir: .research/iteration1
 run_id: proposed-DistilBERT-base-66M-CIFAR-10
 method: proposed

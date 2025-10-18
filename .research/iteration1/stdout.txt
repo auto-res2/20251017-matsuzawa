@@ -1,20 +1,26 @@
-=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:19:46 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 2.347809076309204, 'val_loss': 2.3752623796463013, 'train_acc': 0.0, 'val_acc': 0.0, 'train_f1': 0.0, 'val_f1': 0.0, 'best_val_acc': 0.0, 'best_val_f1': 0.0, 'inference_time': 9.612665176391601e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for proposed-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:20:24 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:20:39 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 0.6441566944122314, 'val_loss': 0.6191309094429016, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.544573758816609e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for proposed-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:21:10 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:21:27 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 2.2958898544311523, 'val_loss': 2.256649136543274, 'train_acc': 0.25, 'val_acc': 0.25, 'train_f1': 0.16666666666666666, 'val_f1': 0.1, 'best_val_acc': 0.25, 'best_val_f1': 0.1, 'inference_time': 7.292270660400391e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-CIFAR-10 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-CIFAR-10 at Fri Oct 17 08:21:45 AM UTC 2025 ===
-
-=== [TRIAL RUN] Start for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:22:01 AM UTC 2025 ===
-Epoch 1: {'epoch': 1, 'train_loss': 0.6248707473278046, 'val_loss': 0.6204240918159485, 'train_acc': 1.0, 'val_acc': 1.0, 'train_f1': 1.0, 'val_f1': 1.0, 'best_val_acc': 1.0, 'best_val_f1': 1.0, 'inference_time': 9.597222992957467e-05}
-Executing subprocess: /home/toma/t-80-8-a/_work/20251017-matsuzawa/20251017-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-DistilBERT-base-66M-alpaca-cleaned results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true wandb.mode=disabled
-=== [TRIAL RUN] PASSED for comparative-1-DistilBERT-base-66M-alpaca-cleaned at Fri Oct 17 08:22:31 AM UTC 2025 ===
-
+Train.py main() starting...
+Seed set
+Starting Optuna optimization with 25 trials...
+Optuna best params: {'learning_rate': 6.583522709794831e-05, 'batch_size': 16, 'adapter_reduction_factor': 24, 'weight_decay': 0.03991635920796699}
+WandB URL: https://wandb.ai/gengaru617-personal/251017-test/runs/proposed-DistilBERT-base-66M-CIFAR-10
+Epoch 1: {'epoch': 1, 'train_loss': 2.0417652075767516, 'val_loss': 1.842023338372715, 'train_acc': 0.2105, 'val_acc': 0.2724, 'train_f1': 0.2016921803924409, 'val_f1': 0.2191621852144347, 'best_val_acc': 0.2724, 'best_val_f1': 0.2191621852144347, 'inference_time': 0.015684772223329393}
+Epoch 2: {'epoch': 2, 'train_loss': 1.7941953144073486, 'val_loss': 1.6655000619614087, 'train_acc': 0.294325, 'val_acc': 0.3504, 'train_f1': 0.28520067250887127, 'val_f1': 0.32445618040106117, 'best_val_acc': 0.3504, 'best_val_f1': 0.32445618040106117, 'inference_time': 0.01651744872998125}
+Epoch 3: {'epoch': 3, 'train_loss': 1.6660241629123689, 'val_loss': 1.5732802190719701, 'train_acc': 0.35575, 'val_acc': 0.409, 'train_f1': 0.34210069913850516, 'val_f1': 0.3724054083806124, 'best_val_acc': 0.409, 'best_val_f1': 0.3724054083806124, 'inference_time': 0.01584290848753323}
+Epoch 4: {'epoch': 4, 'train_loss': 1.5125747943401338, 'val_loss': 1.3787569306528986, 'train_acc': 0.43165, 'val_acc': 0.4816, 'train_f1': 0.4235389819806288, 'val_f1': 0.46660035936727917, 'best_val_acc': 0.4816, 'best_val_f1': 0.46660035936727917, 'inference_time': 0.01483608510928413}
+Epoch 5: {'epoch': 5, 'train_loss': 1.393703448009491, 'val_loss': 1.2739220939505214, 'train_acc': 0.4913, 'val_acc': 0.544, 'train_f1': 0.48702725448924583, 'val_f1': 0.5397360321221598, 'best_val_acc': 0.544, 'best_val_f1': 0.5397360321221598, 'inference_time': 0.016211780115438345}
+Epoch 6: {'epoch': 6, 'train_loss': 1.3028227516174316, 'val_loss': 1.2607297762133443, 'train_acc': 0.529, 'val_acc': 0.5436, 'train_f1': 0.5262405546369582, 'val_f1': 0.5290176476447229, 'best_val_acc': 0.544, 'best_val_f1': 0.5397360321221598, 'inference_time': 0.01643705139525782}
+Epoch 7: {'epoch': 7, 'train_loss': 1.2341743016123772, 'val_loss': 1.2242834985065765, 'train_acc': 0.557025, 'val_acc': 0.5812, 'train_f1': 0.5549935757408668, 'val_f1': 0.5761461713490338, 'best_val_acc': 0.5812, 'best_val_f1': 0.5761461713490338, 'inference_time': 0.014854264335510448}
+Epoch 8: {'epoch': 8, 'train_loss': 1.1765524324655532, 'val_loss': 1.103574615507461, 'train_acc': 0.578575, 'val_acc': 0.6002, 'train_f1': 0.5767184461204927, 'val_f1': 0.6004750745308253, 'best_val_acc': 0.6002, 'best_val_f1': 0.6004750745308253, 'inference_time': 0.015915994065257306}
+Epoch 9: {'epoch': 9, 'train_loss': 1.1234856895208358, 'val_loss': 1.0458894680483273, 'train_acc': 0.593925, 'val_acc': 0.6314, 'train_f1': 0.5924023205350212, 'val_f1': 0.631784403451999, 'best_val_acc': 0.6314, 'best_val_f1': 0.631784403451999, 'inference_time': 0.014982087162736886}
+Epoch 10: {'epoch': 10, 'train_loss': 1.068576016330719, 'val_loss': 1.0231765192537643, 'train_acc': 0.617925, 'val_acc': 0.6424, 'train_f1': 0.6165562406738347, 'val_f1': 0.6377725556726141, 'best_val_acc': 0.6424, 'best_val_f1': 0.6377725556726141, 'inference_time': 0.01682136386347274}
+Epoch 11: {'epoch': 11, 'train_loss': 1.0282380787491798, 'val_loss': 0.9782793818000025, 'train_acc': 0.6308, 'val_acc': 0.6526, 'train_f1': 0.6297347254018956, 'val_f1': 0.6529601627639364, 'best_val_acc': 0.6526, 'best_val_f1': 0.6529601627639364, 'inference_time': 0.01694350044567364}
+Epoch 12: {'epoch': 12, 'train_loss': 0.987712720823288, 'val_loss': 0.9514439757258747, 'train_acc': 0.64545, 'val_acc': 0.6724, 'train_f1': 0.6445168191742696, 'val_f1': 0.6708097958036253, 'best_val_acc': 0.6724, 'best_val_f1': 0.6708097958036253, 'inference_time': 0.016289433732200355}
+Epoch 13: {'epoch': 13, 'train_loss': 0.9520785752534866, 'val_loss': 0.9420011066400205, 'train_acc': 0.6603, 'val_acc': 0.6658, 'train_f1': 0.6594610596038276, 'val_f1': 0.6620561835326836, 'best_val_acc': 0.6724, 'best_val_f1': 0.6708097958036253, 'inference_time': 0.01688532783581426}
+Epoch 14: {'epoch': 14, 'train_loss': 0.9157078872084617, 'val_loss': 0.9049895519075303, 'train_acc': 0.67425, 'val_acc': 0.681, 'train_f1': 0.6735205900322819, 'val_f1': 0.6781991821791946, 'best_val_acc': 0.681, 'best_val_f1': 0.6781991821791946, 'inference_time': 0.01590120525786671}
+Epoch 15: {'epoch': 15, 'train_loss': 0.8868896593868733, 'val_loss': 0.8884079100224919, 'train_acc': 0.681825, 'val_acc': 0.6846, 'train_f1': 0.6813682138904441, 'val_f1': 0.6850900429124102, 'best_val_acc': 0.6846, 'best_val_f1': 0.6850900429124102, 'inference_time': 0.016136657696562452}
+Epoch 16: {'epoch': 16, 'train_loss': 0.8492573662817479, 'val_loss': 0.8682158214215654, 'train_acc': 0.69575, 'val_acc': 0.6934, 'train_f1': 0.6953586835174411, 'val_f1': 0.691412524000391, 'best_val_acc': 0.6934, 'best_val_f1': 0.691412524000391, 'inference_time': 0.017665720595338476}
+Epoch 17: {'epoch': 17, 'train_loss': 0.8188632068276406, 'val_loss': 0.8925480183701926, 'train_acc': 0.708225, 'val_acc': 0.6978, 'train_f1': 0.7078478356711884, 'val_f1': 0.6959716620945012, 'best_val_acc': 0.6978, 'best_val_f1': 0.6959716620945012, 'inference_time': 0.015414461160239321}
+Epoch 18: {'epoch': 18, 'train_loss': 0.7881931926906108, 'val_loss': 0.8530832418142417, 'train_acc': 0.717575, 'val_acc': 0.7044, 'train_f1': 0.7171374427982149, 'val_f1': 0.7041032440815471, 'best_val_acc': 0.7044, 'best_val_f1': 0.7041032440815471, 'inference_time': 0.016289414689182855}
+Epoch 19: {'epoch': 19, 'train_loss': 0.7654118938624859, 'val_loss': 0.8525797041079488, 'train_acc': 0.725275, 'val_acc': 0.707, 'train_f1': 0.7249615514219134, 'val_f1': 0.7057112120319273, 'best_val_acc': 0.707, 'best_val_f1': 0.7057112120319273, 'inference_time': 0.016600846482541995}
+Epoch 20: {'epoch': 20, 'train_loss': 0.74999007011652, 'val_loss': 0.8431062366539678, 'train_acc': 0.7336, 'val_acc': 0.7096, 'train_f1': 0.7331976213789486, 'val_f1': 0.7088897320483043, 'best_val_acc': 0.7096, 'best_val_f1': 0.7088897320483043, 'inference_time': 0.015608463043602892}
+=== [FULL EXPERIMENT] PASSED for proposed-DistilBERT-base-66M-CIFAR-10 at Sat Oct 18 12:24:19 AM UTC 2025 ===
